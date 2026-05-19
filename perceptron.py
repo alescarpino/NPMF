@@ -21,7 +21,7 @@ class Perceptron(object):
         for _ in range(epochs):
             randomIndices_ = np.array(range(trainingX.shape[0]))
             np.random.shuffle(randomIndices_)
-            for iTX, iTY in zip(trainingX[randomIndices_, :],trainingY[randomIndices_, :]):
+            for iTX, iTY in zip(trainingX[randomIndices_, :],trainingY[randomIndices_]):
                 individualUpdate = self.eta * (iTY - self._net_input(iTX,W_))
                 W_[1:] += individualUpdate * iTX
                 W_[0] += individualUpdate
@@ -33,7 +33,7 @@ class Perceptron(object):
     def predict(self, X):
         return self._net_input(X, self.W)
 
-    def _net_input(self, X):
+    def _net_input(self, X,W):
         return np.dot(X,self.W[1:]) + W[0]
     ##
     def initW(self, trainingX):
@@ -49,7 +49,7 @@ class Perceptron(object):
 
         return np.array(W_)
 
-    def calculateError(self, X, Y, W_):
+    def calculateError(self, X, Y, W):
         error_ = .0
         for iX,iY in zip(X, Y,):
             error_ += ((iY - self._net_input(iX,W)) ** 2)

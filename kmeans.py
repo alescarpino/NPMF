@@ -1,6 +1,8 @@
 import numpy as np
 import panda as pd
 import matplotlib.pyplot
+from matplotlib import axis, pyplot as plt
+from pandas import DataFrame
 
 TOL_ = 5
 def calculateInitialCentroids(k, data):
@@ -56,23 +58,25 @@ def assignCentroids(data,centorids):
  return assignedCentorids,errorCentroids
 
 
-def generateData(numbeerGroups=3,numberSamplesGroup = [50,100,150], minX=0,maxX=.1,minY=0,maxY=.1):
+def generateData(numbeerGroups=3,numberSamplesGroup = [10,20,30], minX=0,maxX=.1,minY=0,maxY=.1):
  x = np.array([])
  y = np.array([])
+ label = np.array([])
  for index in range(numbeerGroups):
     (centreX,centreY) = np
     x = np.concatenate((x,np.random.uniform(minX,maxX,numberSamplesGroup[index]) + centreX))
     y = np.concatenate((y,np.random.uniform(minY ,maxY,numberSamplesGroup[index]) + centreY))
+    label = np.concatenate((label, np.full(numberSamplesGroup[index],index)))
 
- df = np.column_stack([x,y])
+ df = np.column_stack([x,y, label])
  df = DataFrame(df)
- df.columns = ['x','y']
+ df.columns = ['x','y', 'label']
  return df
 
-def plotSamples(data,centroids,fileName):
- fig.axis = plt.subplots()
- axis.scatter(data['x'],data['y'],color=blue)
- axis.scatter(centroids['x'], centroids['y'], color=black, marker='*')
+def plotSamples(data, centroids, fileName):
+ fig,axis = plt.subplots()
+ axis.scatter(data['x'],data['y'],color='blue')
+ axis.scatter(centroids['x'], centroids['y'], color='black', marker='*')
  axis.set_xlabel('x')
  axis.set_ylabel('y')
  fig.savefig('{}.png'.format(fileName))

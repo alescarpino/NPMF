@@ -9,25 +9,25 @@ from perceptron import Perceptron
 
 
 class RBFNN(object):
-    def __init__(self, numberInput,numberHideUnits,numberOutputs,eta,nameFeatureInputData,nameLabelOutputData=None):
+    def __init__(self, numberInput,numberHideUnits,numberOutputs,eta,nameFeatureInputData,nameLabelsOutputData=None):
         self.numberInput =  numberInput
         self.numberHideUnits = numberHideUnits
         self.numberOutputs = numberOutputs
         if nameFeatureInputData is None:
-            self.nameFeatureInputData = ['x{}'.format((index_)for index_ in range (numberInput)]
+            self.nameFeatureInputData = ['x{}'.format((index_)for index_ in range (numberInput))];
         else:
-            self.nameFeatureInputData =nameFeatureInputData
-        if nameLabelOutputData is None:
-            self.nameFeatureInputData = ['y{}'.format((index_)for index_ in range (numberInput)]
+            self.nameFeatureInputData =nameFeatureInputData;
+        if nameLabelsOutputData is None:
+            self.nameFeatureInputData = ['y{}'.format((index_)for index_ in range (numberInput))];
         else:
-            self.nameLabelsOutputData = nameLabelsOutputData
-        self.trainingData = None
-            self.trainingDataLabels = None
-            self.centorids = non
-            self.variances = None
-            señf.Z= None
-            self.eta = eta
-            self.perceptron = None
+            self.nameLabelsOutputData = nameLabelsOutputData;
+            self.trainingData = None;
+            self.trainingDataLabels = None;
+            self.centorids = None;
+            self.variances = None;
+            self.Z= None;
+            self.eta = eta;
+            self.perceptron = None;
             self.hasbeeentrainedRBFNN = False
 
 
@@ -69,7 +69,17 @@ class RBFNN(object):
             variances_.append(sum(leastSquare) / filteredData.shape[0])
         return  pd.DataFrame(variances_,columns=['variance'])
     def calculateZ(self, trainingData, centorids, variances):
-        pass
+        Z_ = list()
+        for indexSample_ in range(trainingData.shape[0]):
+            sample_ = trainingData[self.nameFeatureInputData].iloc[indexSample_]
+            row_Z = list()
+            for indexCentroid_ in range(centorids.shape[0]):
+                centorid_ = centorids[self.nameFeatureInputData].iloc[indexCentroid_]
+                variance_  = variances[''].iloc[indexCentroid_]
+                row_Z.append(np.exp(- self.numSquared(sample_,centorid_)/ (2 * variance_)))
+            Z_.append(row_Z)
+
+        return  np.array(Z_)
 
     def initPerceptron(self):
         self.perceptron =Perceptron(self.eta)
