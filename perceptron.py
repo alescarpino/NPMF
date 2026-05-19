@@ -1,6 +1,6 @@
 import numpy
 import numpy as np
-
+###cambiare nome del file da perceptron e mettere quello che c e scritto nell file edeline???
 
 class Perceptron(object):
     def __init__(self, eta):
