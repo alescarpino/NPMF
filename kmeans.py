@@ -23,7 +23,7 @@ def kmeans(k,data):
     break
 
  error = list()
- index = 0
+ index = 1
  while True:
       data['centroid'],errorIteration = assignCentroids(data,centroids)
       error.append(sum(errorIteration))
@@ -32,10 +32,8 @@ def kmeans(k,data):
        if round(error[index],TOL_) == round(error[index-1],TOL_):
         break
        index +=1
-       return
- return centroids,errorIteration
 
- return centroids
+ return centroids,errorIteration
 
 
 def calculateError(vector1,vector2):
@@ -47,6 +45,7 @@ def calculateErrorForAllCentroids(data, sampleIndex, centroids):
  for centroidsIndex in range(centroids.shape[0]):
   error_ = calculateError(centroids.iloc[centroidsIndex, :2],data.iloc[sampleIndex, :2])
   errors = np.append(errors,error_)
+ return errors
 
 def assignCentroids(data,centorids):
  assignedCentorids = list()
@@ -63,7 +62,7 @@ def generateData(numbeerGroups=3,numberSamplesGroup = [10,20,30], minX=0,maxX=.1
  y = np.array([])
  label = np.array([])
  for index in range(numbeerGroups):
-    (centreX,centreY) = np
+    (centreX,centreY) = np.random.uniform(0, 1, 2)
     x = np.concatenate((x,np.random.uniform(minX,maxX,numberSamplesGroup[index]) + centreX))
     y = np.concatenate((y,np.random.uniform(minY ,maxY,numberSamplesGroup[index]) + centreY))
     label = np.concatenate((label, np.full(numberSamplesGroup[index],index)))

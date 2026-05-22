@@ -9,31 +9,35 @@ from perceptron import Perceptron
 
 
 class RBFNN(object):
-    def __init__(self, numberInput,numberHideUnits,numberOutputs,eta,nameFeatureInputData,nameLabelsOutputData=None):
-        self.numberInput =  numberInput
+    def __init__(self, numberInput, numberHideUnits, numberOutputs, eta, nameFeatureInputData=None,
+                 nameLabelsOutputData=None):
+        self.numberInput = numberInput
         self.numberHideUnits = numberHideUnits
         self.numberOutputs = numberOutputs
+
         if nameFeatureInputData is None:
-            self.nameFeatureInputData = ['x{}'.format((index_)for index_ in range (numberInput))];
+            self.nameFeatureInputData = ['x{}'.format(index_) for index_ in range(numberInput)]
         else:
-            self.nameFeatureInputData =nameFeatureInputData;
+            self.nameFeatureInputData = nameFeatureInputData
+
         if nameLabelsOutputData is None:
-            self.nameFeatureInputData = ['y{}'.format((index_)for index_ in range (numberInput))];
+            self.nameLabelsOutputData = ['y{}'.format(index_) for index_ in range(numberOutputs)]
         else:
-            self.nameLabelsOutputData = nameLabelsOutputData;
-            self.trainingData = None;
-            self.trainingDataLabels = None;
-            self.centorids = None;
-            self.variances = None;
-            self.Z= None;
-            self.eta = eta;
-            self.perceptron = None;
-            self.hasbeeentrainedRBFNN = False
+            self.nameLabelsOutputData = nameLabelsOutputData
+
+        self.trainingData = None
+        self.trainingDataLabels = None
+        self.centorids = None
+        self.variances = None
+        self.Z = None
+        self.eta = eta
+        self.perceptron = None
+        self.hasbeeentrainedRBFNN = False
 
 
     def predict(self,data):
         Y_ = None
-        data_ = pd.DataFrame(data,columns=self.nameFeaturesInputData)
+        data_ = pd.DataFrame(data,columns=self.nameFeatureInputData)
         if self.hasbeeentrainedRBFNN:
             Z_ = self.calculateZ(data_, self.centorids,self.variances)
             Y_ = self.perceptron.predict(Z_)
@@ -53,9 +57,9 @@ class RBFNN(object):
         self.trainingDataLabels = pd.DataFrame(dataLabeL,columns=self.nameLabelsOutputData)
 
     def fitHideLayer(self, centroidCalculationProcess):
-        self.trainingData['centroid'], self.trainingData['error'],self.centorids = centroidCalculationProcess(self.numberHideUnits,self.trainingData)
-        self.variances = self.calculateVariances(self.trainingData,self.centorids)
-        self.Z = self.calculateZ(self.trainingData,self.centorids,self.variances)
+        self.centorids, error_iteration = centroidCalculationProcess(self.numberHideUnits, self.trainingData)
+        self.variances = self.calculateVariances(self.trainingData, self.centorids)
+        self.Z = self.calculateZ(self.trainingData, self.centorids, self.variances)
 
     def calculateVariances(self, trainingData, centorids):
         variances_ = list()
@@ -65,7 +69,7 @@ class RBFNN(object):
             leastSquare = list()
             for _xIndex in range(filteredData.shape[0]):
                 sample = filteredData[self.nameFeatureInputData].iloc[_xIndex]
-                leastSquare.append(self.numSquared(sample,centorid_))
+                leastSquare.append(self.sumSquared(sample,centorid_))
             variances_.append(sum(leastSquare) / filteredData.shape[0])
         return  pd.DataFrame(variances_,columns=['variance'])
     def calculateZ(self, trainingData, centorids, variances):
@@ -75,8 +79,8 @@ class RBFNN(object):
             row_Z = list()
             for indexCentroid_ in range(centorids.shape[0]):
                 centorid_ = centorids[self.nameFeatureInputData].iloc[indexCentroid_]
-                variance_  = variances[''].iloc[indexCentroid_]
-                row_Z.append(np.exp(- self.numSquared(sample_,centorid_)/ (2 * variance_)))
+                variance_ = variances['variance'].iloc[indexCentroid_]
+                row_Z.append(np.exp(- self.sumSquared(sample_, centorid_) / (2 * variance_)))
             Z_.append(row_Z)
 
         return  np.array(Z_)
